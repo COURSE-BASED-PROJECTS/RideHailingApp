@@ -4,7 +4,11 @@ import styles from "./styles";
 import Button from "../../components/Button";
 import URL from "../../../assets/Link/URL";
 
-function IntroductionScreen() {
+function IntroductionScreen({navigation}) {
+  const handleStart = ()=>{
+    navigation.navigate('Overview')
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -19,6 +23,7 @@ function IntroductionScreen() {
         <Button
           textInside={"Bắt đầu"}
           style={{ width: 150, height: 50}}
+          handleClick = {handleStart}
         />
       </View>
 
