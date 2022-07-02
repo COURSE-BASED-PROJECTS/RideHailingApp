@@ -5,7 +5,15 @@ import URL from "../../../assets/Link/URL";
 import Button from "../../components/Button";
 import Colors from "../../styles/Colors";
 
-function Overview() {
+function Overview({navigation}) {
+  const handleRegister = ()=>{
+    navigation.navigate('Register')
+  }
+
+  const handleLogin = ()=>{
+    navigation.navigate('Login')
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Image
@@ -23,8 +31,10 @@ function Overview() {
       </View>
 
       <View style={styles.button}>
-        <Button textInside={"Đăng nhập"} style={{ width: 250, height: 50 }} />
-        <Button textInside={"Hoặc đăng ký ngay!"} style={{ width: 250, height: 50, backgroundColor: 'grey', marginTop:15 }} />
+        <Button textInside={"Đăng nhập"} style={{ width: 250, height: 50 }} 
+        handleClick={handleLogin}/>
+        <Button textInside={"Hoặc đăng ký ngay!"} style={{ width: 250, height: 50, backgroundColor: 'grey', marginTop:15 }} 
+        handleClick={handleRegister}/>
       </View>
     </SafeAreaView>
   );
