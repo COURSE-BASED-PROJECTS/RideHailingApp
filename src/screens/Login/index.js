@@ -12,7 +12,14 @@ import URL from "../../../assets/Link/URL";
 import FormElement from "../../components/FormElement";
 
 function Login({ navigation }) {
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    // authentication
+    // navigation.navigate("HomeStack");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "HomeStack" }],
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,7 +50,11 @@ function Login({ navigation }) {
       </KeyboardAvoidingView>
 
       <View style={styles.button}>
-        <Button textInside={"Đăng nhập"} style={{ width: 200, height: 50 }} />
+        <Button
+          textInside={"Đăng nhập"}
+          style={{ width: 200, height: 50 }}
+          handleClick={handleSubmit}
+        />
       </View>
     </SafeAreaView>
   );
