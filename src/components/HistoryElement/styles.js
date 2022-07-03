@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     width: Dimensions.get("window").width,
     height: 100,
+    // backgroundColor: Colors.secondary_light
   },
 
   historyElement: {
