@@ -1,10 +1,10 @@
-import { useEffect } from "react";
 import { View, Text } from "react-native";
+import styles from "./styles";
 
 function Home() {
   return (
-    <View>
-      <Text style={{margin: "auto"}}>Home</Text>
+    <View style={styles.container}>
+      <Text>Home</Text>
     </View>
   );
 }

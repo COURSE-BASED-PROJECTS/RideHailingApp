@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   button: {
-    flex: 0.5,
+    flex: 1,
     marginLeft: 30,
   },
   imgBackground:{
