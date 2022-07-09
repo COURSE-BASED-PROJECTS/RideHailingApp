@@ -25,7 +25,7 @@ function HomeStackScreen() {
               }}
             >
               <Image
-                source={require("../../../assets/icons/home.gif")}
+                source={require("../../../assets/icons/home.png")}
                 resizeMode="contain"
                 style={{
                   width: 25,
@@ -62,7 +62,7 @@ function HomeStackScreen() {
               }}
               >
               <Image
-                source={require("../../../assets/icons/history.gif")}
+                source={require("../../../assets/icons/history.png")}
                 resizeMode="contain"
                 style={{
                   width: 25,
@@ -98,7 +98,7 @@ function HomeStackScreen() {
                 }}
               >
                 <Image
-                  source={require("../../../assets/icons/user.gif")}
+                  source={require("../../../assets/icons/user.png")}
                   resizeMode="contain"
                   style={{
                     width: 25,
