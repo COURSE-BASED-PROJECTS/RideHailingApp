@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        
     },
     header:{
         flex: 1,

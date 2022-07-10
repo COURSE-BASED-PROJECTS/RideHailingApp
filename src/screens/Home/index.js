@@ -8,30 +8,33 @@ import MapView, { Marker } from "react-native-maps";
 import { useSelector, useDispatch } from "react-redux";
 import { setStart } from "../../store/actions";
 import { useEffect, useState } from "react";
-import * as Location from 'expo-location';
+import * as Location from "expo-location";
 
-function Home() {
-    const [start, setStartPosition] = useState({})
+function Home({ navigation }) {
+    const [start, setStartPosition] = useState({});
     const dispatch = useDispatch();
 
-    useEffect(() => {
-      (async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          console.log('Permission to access location was denied');
-          return;
-        }
-  
-        let location = await Location.getCurrentPositionAsync({});
-        console.log(location.coords)
-        const pos = {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude
-        }
+    const moveTo = () => {
+        navigation.navigate("Hailing");
+    };
 
-        dispatch(setStart(pos));
-        setStartPosition(pos)
-      })();
+    useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== "granted") {
+                console.log("Permission to access location was denied");
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            const pos = {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+            };
+
+            dispatch(setStart(pos));
+            setStartPosition(pos);
+        })();
     }, []);
 
     return (
@@ -43,11 +46,26 @@ function Home() {
                 />
                 <Text style={styles.headerTitle}>Xin chào, Đức Huy </Text>
 
-                <TouchableOpacity style={styles.headerNotifButton}>
+                <TouchableOpacity
+                    style={styles.headerNotifButton}
+                    onPress={moveTo}
+                >
                     <Image
                         source={require("../../../assets/icons/notification.png")}
                         style={styles.headerNotifIcon}
                     />
+                    <Text
+                        style={{
+                            position: "absolute",
+                            top: -10,
+                            right: -5,
+                            fontSize: 18,
+                            color: 'red',
+                            fontWeight: '600'
+                        }}
+                    >
+                        5
+                    </Text>
                 </TouchableOpacity>
             </View>
 
@@ -62,8 +80,8 @@ function Home() {
                 region={{
                     latitude: start?.latitude ?? 0,
                     longitude: start?.longitude ?? 0,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
+                    latitudeDelta: 0.05,
+                    longitudeDelta: 0.05,
                 }}
                 showsUserLocation={true}
                 showsTraffic={true}
