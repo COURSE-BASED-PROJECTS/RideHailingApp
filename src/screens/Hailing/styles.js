@@ -11,8 +11,12 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.secondary_light,
     },
     hailingContent:{
-        flex: 1.4,
+        flex: 1.2,
         backgroundColor: Colors.secondary_medium,
+    },
+    currentMapView:{
+        width: '100%',
+        height: '100%'
     }
     
 });

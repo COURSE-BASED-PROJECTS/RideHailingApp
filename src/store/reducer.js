@@ -1,9 +1,9 @@
 import { SET_START, SET_DES, SET_TRAVEL_INFO } from "./constants";
 
 const initState = {
-    start: {},
-    des: {},
-    travelInformation: {},
+    start: null,
+    des: null,
+    travelInformation: null
 };
 
 const travelReducer = (state = initState, action) => {

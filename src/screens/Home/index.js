@@ -2,8 +2,8 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
 import Search from "../../components/Search";
-// import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-// import { GOOGLE_MAPS_APIKEY } from "@env";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { GOOGLE_MAPS_APIKEY } from "@env";
 import MapView, { Marker } from "react-native-maps";
 import { useSelector, useDispatch } from "react-redux";
 import { setStart } from "../../store/actions";
@@ -46,10 +46,7 @@ function Home({ navigation }) {
                 />
                 <Text style={styles.headerTitle}>Xin chào, Đức Huy </Text>
 
-                <TouchableOpacity
-                    style={styles.headerNotifButton}
-                    onPress={moveTo}
-                >
+                <TouchableOpacity style={styles.headerNotifButton}>
                     <Image
                         source={require("../../../assets/icons/notification.png")}
                         style={styles.headerNotifIcon}
@@ -60,8 +57,8 @@ function Home({ navigation }) {
                             top: -10,
                             right: -5,
                             fontSize: 18,
-                            color: 'red',
-                            fontWeight: '600'
+                            color: "red",
+                            fontWeight: "600",
                         }}
                     >
                         5
@@ -72,7 +69,40 @@ function Home({ navigation }) {
             <Text style={styles.title}>BẠN MUỐN ĐI ĐÂU ?</Text>
 
             <View style={styles.searchInput}>
-                <Search />
+                {/* <Search /> */}
+
+                <GooglePlacesAutocomplete
+                    styles={{
+                        container: {
+                            flex: 0,
+                            width: 300,
+                            height: 100,
+                            zIndex: 99,
+                        },
+                        textInput: {
+                            fontSize: 18,
+                        },
+                    }}
+                    onPress={(data, details = null) => {
+                        dispatch(
+                            setStart({
+                                location: details.geometry.location,
+                                description: data.description,
+                            })
+                        );
+                        moveTo();
+                    }}
+                    placeholder="Nhập điểm đón bạn ?"
+                    nearbyPlacesAPI="GooglePlacesSearch"
+                    debounce={400}
+                    fetchDetails={true}
+                    enablePoweredByContainer={false}
+                    minLength={2}
+                    query={{
+                        key: GOOGLE_MAPS_APIKEY,
+                        language: "vi",
+                    }}
+                />
             </View>
 
             <MapView
@@ -94,27 +124,6 @@ function Home({ navigation }) {
                     }}
                 />
             </MapView>
-
-            {/* <GooglePlacesAutocomplete
-        styles={{
-          container: {
-            flex: 0,
-            width: 300,
-            height: 100,
-            zIndex: 99
-          },
-          textInput: {
-            fontSize: 18
-          }
-        }}
-        placeholder="Where from ?"
-        nearbyPlacesAPI="GooglePlacesSearch"
-        debounce={400}
-        query={{
-          key: GOOGLE_MAPS_APIKEY,
-          language: 'vi',
-        }}
-      /> */}
         </SafeAreaView>
     );
 }
