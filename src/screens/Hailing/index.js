@@ -1,16 +1,17 @@
-import { View, Text, Image } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View } from "react-native";
 import styles from "./styles";
 import NavigateCardStackScreen from "../../navigations/NavigateCardScreen";
+
 import MapView, { Marker } from "react-native-maps";
-import { useSelector } from "react-redux";
 import MapViewDirections from "react-native-maps-directions";
 import { GOOGLE_MAPS_APIKEY } from "@env";
+
+import { useSelector } from "react-redux";
 import { useRef, useEffect } from "react";
+import { travelSelector } from "../../store/selector";
 
 function Hailing() {
-    const start = useSelector((state) => state.start);
-    const des = useSelector((state) => state.des);
+    const { start, des } = useSelector(travelSelector);
     const mapRef = useRef(null);
 
     useEffect(() => {

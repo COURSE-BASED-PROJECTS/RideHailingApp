@@ -1,10 +1,11 @@
-import { Text, View, TouchableOpacity, Image, ScrollView } from "react-native";
+import { Text, TouchableOpacity, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
-import Search from "../../components/Search";
+
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { GOOGLE_MAPS_APIKEY } from "@env";
-import { setDes } from "../../store/actions";
+
+import { setDes } from "../Home/travelSlice";
 import { useDispatch } from "react-redux";
 
 function Destination({ navigation }) {

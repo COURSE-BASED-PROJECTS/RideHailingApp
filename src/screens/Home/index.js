@@ -1,13 +1,13 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
-import Search from "../../components/Search";
+
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import MapView, { Marker } from "react-native-maps";
-import { useSelector, useDispatch } from "react-redux";
-import { setStart } from "../../store/actions";
+import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+import { setStart } from "./travelSlice";
 import * as Location from "expo-location";
 
 function Home({ navigation }) {
