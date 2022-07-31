@@ -1,3 +1,3 @@
-const loginAPI = "https://localhost:8080/login"
+const loginAPI = "http://localhost:9090/auth/login";
 
-export {loginAPI}
+export { loginAPI };
