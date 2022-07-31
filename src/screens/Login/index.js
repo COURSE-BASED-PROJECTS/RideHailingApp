@@ -10,25 +10,39 @@ import { accountSelector } from "../../store/selector";
 import { setUserInfo } from "./accountSlice";
 import { useSelector, useDispatch } from "react-redux";
 
-import {loginAPI} from "../../service/api"
+import { loginAPI } from "../../service/api";
 
 function Login({ navigation }) {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const { username, password } = useSelector(accountSelector);
 
-    const handleSubmit = () => {
-        if(username !== "" && password !== ""){
-          const response = await fetch(loginAPI);
-          const userInfo = await response.json();
-		
-		  if(userInfo !== null){
-			dispatch(setUserInfo(userInfo))
+    const handleSubmit = async () => {
+        if (username !== "" && password !== "") {
+            try {
+                const response = await fetch(loginAPI, {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        username,
+                        password,
+                    }),
+                });
+                const userInfo = await response.json();
 
-			navigation.reset({
-			  index: 0,
-			  routes: [{ name: "HomeStack" }],
-		  	});
-		  }
+                if (userInfo !== null) {
+                    dispatch(setUserInfo(userInfo));
+
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: "HomeStack" }],
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
 
