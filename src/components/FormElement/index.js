@@ -14,13 +14,14 @@ function FormElement(props) {
         placeholder = "Nhập thông tin",
         keyboardType = "default",
         secureTextEntry = false,
+        text = "default",
     } = props;
 
     const handleInfoAccount = (newText) => {
         if (secureTextEntry) {
-            dispatch(setUsername(newText));
-        } else {
             dispatch(setPassword(newText));
+        } else {
+            dispatch(setUsername(newText));
         }
     };
 
@@ -39,7 +40,13 @@ function FormElement(props) {
                         onChangeText={(newText) => {
                             handleInfoAccount(newText);
                         }}
-                        value={secureTextEntry ? username : password}
+                        value={
+                            secureTextEntry
+                                ? password
+                                : text === "_username_"
+                                ? username
+                                : text
+                        }
                     />
                 </View>
             </View>

@@ -84,6 +84,7 @@ function Home({ navigation }) {
                         },
                     }}
                     onPress={(data, details = null) => {
+                        console.log(details)
                         dispatch(
                             setStart({
                                 location: details.geometry.location,

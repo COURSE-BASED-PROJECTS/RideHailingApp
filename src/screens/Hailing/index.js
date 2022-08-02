@@ -30,8 +30,8 @@ function Hailing() {
                     style={styles.currentMapView}
                     mapType="mutedStandard"
                     initialRegion={{
-                        latitude: start.location.lat,
-                        longitude: start.location.lng,
+                        latitude: start?.location.lat,
+                        longitude: start?.location.lng,
                         latitudeDelta: 0.005,
                         longitudeDelta: 0.005,
                     }}
@@ -52,8 +52,8 @@ function Hailing() {
                     {start?.location.lat && (
                         <Marker
                             coordinate={{
-                                latitude: start.location.lat,
-                                longitude: start.location.lng,
+                                latitude: start?.location.lat,
+                                longitude: start?.location.lng,
                             }}
                             identifier="start"
                         />
@@ -62,8 +62,8 @@ function Hailing() {
                     {des?.location.lat && (
                         <Marker
                             coordinate={{
-                                latitude: des.location.lat,
-                                longitude: des.location.lng,
+                                latitude: des?.location.lat,
+                                longitude: des?.location.lng,
                             }}
                             identifier="des"
                         />

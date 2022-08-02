@@ -28,6 +28,7 @@ function Login({ navigation }) {
                     const userInfo = response.data;
 
                     if (userInfo !== null && response.status === 200) {
+                        console.log(userInfo)
                         dispatch(setUserInfo(userInfo));
 
                         navigation.reset({
@@ -63,6 +64,7 @@ function Login({ navigation }) {
                     <FormElement
                         title={"Tên tài khoản / SĐT"}
                         placeholder={"Nhập tên tài khoản / SĐT"}
+                        text="_username_"
                     />
 
                     <FormElement
