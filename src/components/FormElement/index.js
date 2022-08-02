@@ -2,10 +2,12 @@ import { View, Text, TextInput } from "react-native";
 import styles from "./styles";
 
 import { setUsername, setPassword } from "../../screens/Login/accountSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { accountSelector } from "../../store/selector";
 
 function FormElement(props) {
     const dispatch = useDispatch();
+    const { username, password } = useSelector(accountSelector);
 
     const {
         title = "N/A",
@@ -14,11 +16,11 @@ function FormElement(props) {
         secureTextEntry = false,
     } = props;
 
-    const handleInfoAccount = (e) => {
+    const handleInfoAccount = (newText) => {
         if (secureTextEntry) {
-            dispatch(setUsername(e.target.value));
+            dispatch(setUsername(newText));
         } else {
-            dispatch(setPassword(e.target.value));
+            dispatch(setPassword(newText));
         }
     };
 
@@ -34,9 +36,10 @@ function FormElement(props) {
                         placeholder={placeholder}
                         keyboardType={keyboardType}
                         secureTextEntry={secureTextEntry}
-                        onChange={(e) => {
-                            handleInfoAccount(e);
+                        onChangeText={(newText) => {
+                            handleInfoAccount(newText);
                         }}
+                        value={secureTextEntry ? username : password}
                     />
                 </View>
             </View>

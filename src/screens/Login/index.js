@@ -7,10 +7,11 @@ import URL from "../../../assets/Link/URL";
 import FormElement from "../../components/FormElement";
 
 import { accountSelector } from "../../store/selector";
-import { setUserInfo } from "./accountSlice";
+import { setUserInfo, setUsername, setPassword } from "./accountSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 import { loginAPI } from "../../service/api";
+import axios from "axios";
 
 function Login({ navigation }) {
     const dispatch = useDispatch();
@@ -18,31 +19,29 @@ function Login({ navigation }) {
 
     const handleSubmit = async () => {
         if (username !== "" && password !== "") {
-            try {
-                const response = await fetch(loginAPI, {
-                    method: "POST",
-                    headers: {
-                        Accept: "application/json",
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        username,
-                        password,
-                    }),
+            axios
+                .post(loginAPI, {
+                    username,
+                    password,
+                })
+                .then(function (response) {
+                    const userInfo = response.data;
+
+                    if (userInfo !== null && response.status === 200) {
+                        dispatch(setUserInfo(userInfo));
+
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: "HomeStack" }],
+                        });
+                    }
+                })
+                .catch(function (error) {
+                    alert("Tên tài khoản hoặc mật khẩu sai");
+                    dispatch(setUsername(""));
+                    dispatch(setPassword(""));
+                    console.log(error);
                 });
-                const userInfo = await response.json();
-
-                if (userInfo !== null) {
-                    dispatch(setUserInfo(userInfo));
-
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: "HomeStack" }],
-                    });
-                }
-            } catch (error) {
-                console.error(error);
-            }
         }
     };
 
