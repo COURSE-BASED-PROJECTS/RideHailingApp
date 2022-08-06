@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 import {
     View,
     Text,
@@ -8,29 +9,16 @@ import {
     Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 import Colors from "../../styles/Colors";
 import styles from "./styles";
 
-const data = [
-    {
-        id: "UpCar-X-123",
-        title: "Xe 4 chỗ",
-        multiplier: 1,
-        image: "https://links.papareact.com/3pn",
-    },
-    {
-        id: "UpCar-X-456",
-        title: "Xe 7 chỗ",
-        multiplier: 1.2,
-        image: "https://links.papareact.com/5w8",
-    },
-    {
-        id: "UpCar-X-789",
-        title: "Xe 2 chỗ",
-        multiplier: 1.75,
-        image: "https://links.papareact.com/7pf",
-    },
-];
+import SockJS from "sockjs-client"; // Note this line
+import Stomp from "stompjs";
+
+import dataCar from "../../utils/dataCar";
+
+let stompClient = null;
 
 function Car({ navigation }) {
     const [selected, setSelected] = useState(null);
@@ -38,6 +26,62 @@ function Car({ navigation }) {
     const handleBack = () => {
         navigation.navigate("Destination");
     };
+
+    const handleHailingCar = () => {
+        console.log(stompClient);
+        if (stompClient) {
+            stompClient.send(
+                "/app/order.sendOrder",
+                {},
+                JSON.stringify({
+                    type: "SENT",
+                    phoneNumber: "0123456789",
+                    cusName: "Nguyen Duc Huy",
+                    pickingAddress: "227 Nguyen van cu",
+                    lngPickingAddr: 123,
+                    latPickingAddr: 456,
+                    arrivingAddress: "228 Nguyen van cu",
+                    lngArrivingAddr: 789,
+                    latArrivingAddr: 0,
+                    distance: 23.2,
+                    duration: 1200,
+                    cost: 23000,
+                    bookingTime: new Date(
+                        Date.now() - (new Date().getTimezoneOffset() * 60000)
+                    )
+                        .toISOString()
+                        .slice(0, -1),
+                })
+            );
+
+            navigation.navigate("InfoHailing");
+        }
+    };
+
+    const onConnected = () => {
+        console.log("onConnected");
+        // Subscribe to the Public Topic
+        stompClient.subscribe("/topic/public", onMessageReceived);
+    };
+
+    const onError = (error) => {
+        console.log(error);
+    };
+
+    const onMessageReceived = (payload) => {
+        console.log("onMessageReceived");
+        const message = JSON.parse(payload.body);
+        console.log(message);
+    };
+
+    useEffect(() => {
+        const socket = new SockJS("http://10.0.2.2:8080/ws");
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, onConnected, onError);
+
+        return () => stompClient && stompClient.disconnect();
+    }, []);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -58,7 +102,7 @@ function Car({ navigation }) {
             </View>
 
             <FlatList
-                data={data}
+                data={dataCar}
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         onPress={() => setSelected(item)}
@@ -69,7 +113,7 @@ function Car({ navigation }) {
                             flexDirection: "row",
                             paddingHorizontal: 20,
                             backgroundColor:
-                                item.id === selected?.id
+                                item?.id === selected?.id
                                     ? Colors.secondary_light
                                     : "transparent",
                         }}
@@ -92,19 +136,19 @@ function Car({ navigation }) {
                 )}
             />
 
-            <View style={{ display: "flex", marginTop: 20}}>
+            <View style={{ display: "flex", marginTop: 20 }}>
                 <TouchableOpacity
                     style={{
                         width: Dimensions.get("window").width * 0.9,
                         height: 50,
                         backgroundColor: "black",
                         alignSelf: "center",
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        display: 'flex',
-                        borderRadius: 10
-                    
+                        alignItems: "center",
+                        justifyContent: "center",
+                        display: "flex",
+                        borderRadius: 10,
                     }}
+                    onPress={handleHailingCar}
                 >
                     <Text
                         style={{

@@ -9,11 +9,12 @@ import * as Location from "expo-location";
 
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { setStart } from "./travelSlice";
+import { setStart } from "../../store/reducer/travelSlice";
 
 function Home({ navigation }) {
     const [start, setStartPosition] = useState({});
     const dispatch = useDispatch();
+    console.log("Home render");
 
     const moveTo = () => {
         navigation.navigate("Hailing");
@@ -47,7 +48,7 @@ function Home({ navigation }) {
                 />
                 <Text style={styles.headerTitle}>Xin chào, Đức Huy </Text>
 
-                <TouchableOpacity style={styles.headerNotifButton}>
+                <TouchableOpacity style={styles.headerNotifButton} onPress={moveTo}>
                     <Image
                         source={require("../../../assets/icons/notification.png")}
                         style={styles.headerNotifIcon}
@@ -71,7 +72,8 @@ function Home({ navigation }) {
 
             <View style={styles.searchInput}>
                 {/* <Search /> */}
-                <GooglePlacesAutocomplete
+
+                {/* <GooglePlacesAutocomplete
                     styles={{
                         container: {
                             flex: 0,
@@ -84,7 +86,7 @@ function Home({ navigation }) {
                         },
                     }}
                     zIndex={1000}
-                    onFail={(error) => console.error(error)}
+                    // onFail={(error) => console.error(error)}
                     onPress={(data, details = null) => {
                         console.log(details);
                         dispatch(
@@ -105,7 +107,7 @@ function Home({ navigation }) {
                         key: GOOGLE_MAPS_APIKEY,
                         language: "vi",
                     }}
-                />
+                /> */}
             </View>
 
             <MapView

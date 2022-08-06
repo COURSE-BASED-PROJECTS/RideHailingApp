@@ -25,7 +25,7 @@ function Hailing() {
     return (
         <View style={styles.container}>
             <View style={styles.map}>
-                <MapView
+                {/* <MapView
                     ref={mapRef}
                     style={styles.currentMapView}
                     mapType="mutedStandard"
@@ -68,7 +68,7 @@ function Hailing() {
                             identifier="des"
                         />
                     )}
-                </MapView>
+                </MapView> */}
             </View>
             <View style={styles.hailingContent}>
                 <NavigateCardStackScreen />
