@@ -1,7 +1,7 @@
 import { View, Text, TextInput } from "react-native";
 import styles from "./styles";
 
-import { setUsername, setPassword } from "../../screens/Login/accountSlice";
+import { setUsername, setPassword } from "../../store/reducer/accountSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { accountSelector } from "../../store/selector";
 

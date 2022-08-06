@@ -5,10 +5,11 @@ import styles from "./styles";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import MapView, { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { setStart } from "./travelSlice";
-import * as Location from "expo-location";
 
 function Home({ navigation }) {
     const [start, setStartPosition] = useState({});
@@ -70,7 +71,6 @@ function Home({ navigation }) {
 
             <View style={styles.searchInput}>
                 {/* <Search /> */}
-
                 <GooglePlacesAutocomplete
                     styles={{
                         container: {
@@ -83,8 +83,10 @@ function Home({ navigation }) {
                             fontSize: 18,
                         },
                     }}
+                    zIndex={1000}
+                    onFail={(error) => console.error(error)}
                     onPress={(data, details = null) => {
-                        console.log(details)
+                        console.log(details);
                         dispatch(
                             setStart({
                                 location: details.geometry.location,

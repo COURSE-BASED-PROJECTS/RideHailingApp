@@ -5,7 +5,7 @@ import styles from "./styles";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 
-import { setDes } from "../Home/travelSlice";
+import { setDes } from "../../store/reducer/travelSlice";
 import { useDispatch } from "react-redux";
 
 function Destination({ navigation }) {

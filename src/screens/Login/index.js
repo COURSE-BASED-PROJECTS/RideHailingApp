@@ -7,7 +7,7 @@ import URL from "../../../assets/Link/URL";
 import FormElement from "../../components/FormElement";
 
 import { accountSelector } from "../../store/selector";
-import { setUserInfo, setUsername, setPassword } from "./accountSlice";
+import { setUserInfo, setUsername, setPassword } from "../../store/reducer/accountSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 import { loginAPI } from "../../service/api";
@@ -28,7 +28,7 @@ function Login({ navigation }) {
                     const userInfo = response.data;
 
                     if (userInfo !== null && response.status === 200) {
-                        console.log(userInfo)
+                        console.log(userInfo);
                         dispatch(setUserInfo(userInfo));
 
                         navigation.reset({
