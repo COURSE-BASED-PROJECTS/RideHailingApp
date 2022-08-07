@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 import {
     View,
     Text,
@@ -15,6 +14,15 @@ import styles from "./styles";
 
 import SockJS from "sockjs-client"; // Note this line
 import Stomp from "stompjs";
+import axios from "axios";
+
+import { travelSelector } from "../../store/selector";
+import { searchSelector } from "../../store/selector";
+import { useDispatch, useSelector } from "react-redux";
+import { setTravelInfomation } from "../../store/reducer/travelSlice";
+
+import { GOONG_REST_API } from "@env";
+import { distance } from "../../service/api";
 
 import dataCar from "../../utils/dataCar";
 
@@ -22,36 +30,79 @@ let stompClient = null;
 
 function Car({ navigation }) {
     const [selected, setSelected] = useState(null);
+    const { start, des, travelInformation } = useSelector(travelSelector);
+    const { searchStart, searchDes } = useSelector(searchSelector);
+    const dispatch = useDispatch();
 
     const handleBack = () => {
         navigation.navigate("Destination");
     };
 
+    useEffect(() => {
+        axios
+            .get(distance, {
+                params: {
+                    origin: start?.latitude + "," + start?.longitude,
+                    destination: des?.latitude + "," + des?.longitude,
+                    vehicle: "car",
+                    api_key: GOONG_REST_API,
+                },
+            })
+            .then(function (response) {
+                if (response.status === 200) {
+                    const dataTravel = response.data.routes[0].legs[0];
+
+                    const distanceTrip = dataTravel.distance.text;
+                    const timeTrip = dataTravel.duration.text;
+                    const distanceTripValue = dataTravel.distance.value;
+                    const timeTripValue = dataTravel.duration.value;
+
+                    dispatch(
+                        setTravelInfomation({
+                            distanceTrip,
+                            timeTrip,
+                            distanceTripValue,
+                            timeTripValue,
+                        })
+                    );
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+            .then(function () {
+                // always executed
+            });
+    }, [start, des]);
+
     const handleHailingCar = () => {
-        console.log(stompClient);
-        if (stompClient) {
+        const packageHailing = {
+            type: "SENT",
+            phoneNumber: "0123456789",
+            cusName: "Nguyen Duc Huy",
+            pickingAddress: searchStart,
+            lngPickingAddr: +start?.latitude ?? 0,
+            latPickingAddr: +start?.longitude ?? 0,
+            arrivingAddress: searchDes,
+            lngArrivingAddr: +des?.latitude ?? 0,
+            latArrivingAddr: +des?.longitude ?? 0,
+            distance: +travelInformation?.distanceTripValue ?? 0,
+            duration: +travelInformation?.timeTripValue ?? 0,
+            cost: 23000,
+            bookingTime: new Date(
+                Date.now() - new Date().getTimezoneOffset() * 60000
+            )
+                .toISOString()
+                .slice(0, -1),
+        };
+
+        console.log(packageHailing);
+
+        if (stompClient !== null) {
             stompClient.send(
                 "/app/order.sendOrder",
                 {},
-                JSON.stringify({
-                    type: "SENT",
-                    phoneNumber: "0123456789",
-                    cusName: "Nguyen Duc Huy",
-                    pickingAddress: "227 Nguyen van cu",
-                    lngPickingAddr: 123,
-                    latPickingAddr: 456,
-                    arrivingAddress: "228 Nguyen van cu",
-                    lngArrivingAddr: 789,
-                    latArrivingAddr: 0,
-                    distance: 23.2,
-                    duration: 1200,
-                    cost: 23000,
-                    bookingTime: new Date(
-                        Date.now() - (new Date().getTimezoneOffset() * 60000)
-                    )
-                        .toISOString()
-                        .slice(0, -1),
-                })
+                JSON.stringify(packageHailing)
             );
 
             navigation.navigate("InfoHailing");
@@ -65,6 +116,7 @@ function Car({ navigation }) {
     };
 
     const onError = (error) => {
+        stompClient = null;
         console.log(error);
     };
 
@@ -128,10 +180,18 @@ function Car({ navigation }) {
                         />
 
                         <View>
-                            <Text>{item.title}</Text>
-                            <Text>Thời gian di chuyển</Text>
+                            <Text style={{ fontWeight: "500" }}>
+                                {item.title}
+                            </Text>
+                            <Text style={{ fontWeight: "500" }}>
+                                Thời gian di chuyển:{" "}
+                            </Text>
+                            <Text>
+                                {travelInformation?.timeTrip ?? ""} -{" "}
+                                {travelInformation?.distanceTrip ?? ""}
+                            </Text>
                         </View>
-                        <Text>100,000 đ</Text>
+                        <Text style={{ fontWeight: "500" }}>100,000 đ</Text>
                     </TouchableOpacity>
                 )}
             />

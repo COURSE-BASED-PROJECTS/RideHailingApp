@@ -44,7 +44,6 @@ function Home({ navigation }) {
                 response = response.data;
 
                 if (response.status === "OK") {
-                    console.log(response.results[0].formatted_address);
                     dispatch(
                         setSearchStart(response.results[0].formatted_address)
                     );

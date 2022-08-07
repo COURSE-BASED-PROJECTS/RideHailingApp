@@ -35,7 +35,6 @@ function Hailing() {
                 response = response.data;
 
                 if (response.status === "OK") {
-                    console.log(response.results[0].formatted_address);
                     dispatch(
                         setSearchDes(response.results[0].formatted_address)
                     );
@@ -53,7 +52,7 @@ function Hailing() {
     };
 
     useEffect(() => {
-        if (!start || !des) return;
+        if (start === null || des === null) return;
 
         mapRef.current.fitToSuppliedMarkers(["start", "des"], {
             edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },

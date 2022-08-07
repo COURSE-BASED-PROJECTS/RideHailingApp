@@ -6,14 +6,18 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import { GOOGLE_MAPS_APIKEY } from "@env";
 
 import { setDes } from "../../store/reducer/travelSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
+import { travelSelector } from "../../store/selector";
 
 import Search from "../../components/Search";
 
 function Destination({ navigation }) {
     const dispatch = useDispatch();
+    const { start, des } = useSelector(travelSelector);
 
     const handleMove = () => {
+        if (start === null || des === null) return;
         navigation.navigate("CarPicking");
     };
 
