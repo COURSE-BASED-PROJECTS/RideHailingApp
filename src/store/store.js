@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import travelSlice from "../store/reducer/travelSlice";
-import accountSlice from "../store/reducer/accountSlice";
+import travelSlice from "./reducer/travelSlice";
+import accountSlice from "./reducer/accountSlice";
+import searchSlice from "./reducer/searchSlice";
 
 export const store = configureStore({
     reducer: {
         travel: travelSlice,
         account: accountSlice,
+        search: searchSlice,
     },
 });

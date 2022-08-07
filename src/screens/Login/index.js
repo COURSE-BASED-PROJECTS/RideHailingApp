@@ -7,7 +7,11 @@ import URL from "../../../assets/Link/URL";
 import FormElement from "../../components/FormElement";
 
 import { accountSelector } from "../../store/selector";
-import { setUserInfo, setUsername, setPassword } from "../../store/reducer/accountSlice";
+import {
+    setUserInfo,
+    setUsername,
+    setPassword,
+} from "../../store/reducer/accountSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 import { loginAPI } from "../../service/api";

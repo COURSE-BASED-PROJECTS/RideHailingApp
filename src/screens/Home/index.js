@@ -2,22 +2,63 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./styles";
 
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { GOOGLE_MAPS_APIKEY } from "@env";
-import MapView, { Marker } from "react-native-maps";
-import * as Location from "expo-location";
+import { GOOGLE_MAPS_APIKEY, GOONG_REST_API } from "@env";
+import { geocode } from "../../service/api";
 
-import { useDispatch } from "react-redux";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import MapView, { Marker } from "react-native-maps";
+import MapViewDirections from "react-native-maps-directions";
+import * as Location from "expo-location";
+import axios from "axios";
+
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+
 import { setStart } from "../../store/reducer/travelSlice";
+import { setSearchStart } from "../../store/reducer/searchSlice";
+import { travelSelector } from "../../store/selector";
+
+import Search from "../../components/Search";
 
 function Home({ navigation }) {
-    const [start, setStartPosition] = useState({});
+    const { start } = useSelector(travelSelector);
     const dispatch = useDispatch();
     console.log("Home render");
 
     const moveTo = () => {
         navigation.navigate("Hailing");
+    };
+
+    const handleClickMap = (e) => {
+        axios
+            .get(geocode, {
+                params: {
+                    latlng:
+                        e.nativeEvent.coordinate.latitude +
+                        "," +
+                        e.nativeEvent.coordinate.longitude,
+                    api_key: GOONG_REST_API,
+                },
+            })
+            .then(function (response) {
+                response = response.data;
+
+                if (response.status === "OK") {
+                    console.log(response.results[0].formatted_address);
+                    dispatch(
+                        setSearchStart(response.results[0].formatted_address)
+                    );
+                }
+                // console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+            .then(function () {
+                // always executed
+            });
+
+        dispatch(setStart(e.nativeEvent.coordinate));
     };
 
     useEffect(() => {
@@ -35,7 +76,6 @@ function Home({ navigation }) {
             };
 
             dispatch(setStart(pos));
-            setStartPosition(pos);
         })();
     }, []);
 
@@ -48,7 +88,10 @@ function Home({ navigation }) {
                 />
                 <Text style={styles.headerTitle}>Xin chào, Đức Huy </Text>
 
-                <TouchableOpacity style={styles.headerNotifButton} onPress={moveTo}>
+                <TouchableOpacity
+                    style={styles.headerNotifButton}
+                    onPress={moveTo}
+                >
                     <Image
                         source={require("../../../assets/icons/notification.png")}
                         style={styles.headerNotifIcon}
@@ -71,7 +114,7 @@ function Home({ navigation }) {
             <Text style={styles.title}>BẠN MUỐN ĐI ĐÂU ?</Text>
 
             <View style={styles.searchInput}>
-                {/* <Search /> */}
+                <Search type={"start"} moveTo={moveTo} />
 
                 {/* <GooglePlacesAutocomplete
                     styles={{
@@ -86,7 +129,7 @@ function Home({ navigation }) {
                         },
                     }}
                     zIndex={1000}
-                    // onFail={(error) => console.error(error)}
+                    onFail={(error) => console.error(error)}
                     onPress={(data, details = null) => {
                         console.log(details);
                         dispatch(
@@ -115,13 +158,27 @@ function Home({ navigation }) {
                 region={{
                     latitude: start?.latitude ?? 0,
                     longitude: start?.longitude ?? 0,
-                    latitudeDelta: 0.05,
-                    longitudeDelta: 0.05,
+                    latitudeDelta: 0.005,
+                    longitudeDelta: 0.005,
                 }}
                 showsUserLocation={true}
                 showsTraffic={true}
                 userLocationUpdateInterval={5000}
+                onPress={(e) => {
+                    handleClickMap(e);
+                }}
             >
+                {/* <MapViewDirections
+                    origin={{ latitude: start?.latitude ?? 0, longitude: start?.longitude ?? 0 }}
+                    destination={{
+                        latitude: 37.771707,
+                        longitude: -122.4053769,
+                    }}
+                    apikey={GOOGLE_MAPS_APIKEY}
+                    strokeWidth={3}
+                    strokeColor="black"
+                /> */}
+
                 <Marker
                     coordinate={{
                         latitude: start?.latitude ?? 0,

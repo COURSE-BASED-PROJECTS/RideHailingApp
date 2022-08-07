@@ -8,6 +8,8 @@ import { GOOGLE_MAPS_APIKEY } from "@env";
 import { setDes } from "../../store/reducer/travelSlice";
 import { useDispatch } from "react-redux";
 
+import Search from "../../components/Search";
+
 function Destination({ navigation }) {
     const dispatch = useDispatch();
 
@@ -18,9 +20,9 @@ function Destination({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Chào buổi sáng, Đức Huy</Text>
-            {/* <Search /> */}
+            <Search type={"des"} />
 
-            <GooglePlacesAutocomplete
+            {/* <GooglePlacesAutocomplete
                 styles={{
                     container: {
                         flex: 0,
@@ -50,7 +52,7 @@ function Destination({ navigation }) {
                     key: GOOGLE_MAPS_APIKEY,
                     language: "vi",
                 }}
-            />
+            /> */}
 
             <TouchableOpacity
                 style={styles.pickingCarButton}

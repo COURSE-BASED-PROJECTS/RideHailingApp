@@ -4,15 +4,53 @@ import NavigateCardStackScreen from "../../navigations/NavigateCardScreen";
 
 import MapView, { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
-import { GOOGLE_MAPS_APIKEY } from "@env";
+import { GOOGLE_MAPS_APIKEY, GOONG_REST_API } from "@env";
+import { geocode } from "../../service/api";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useRef, useEffect } from "react";
 import { travelSelector } from "../../store/selector";
+import { setSearchDes } from "../../store/reducer/searchSlice";
+import { setDes } from "../../store/reducer/travelSlice";
+
+import axios from "axios";
 
 function Hailing() {
     const { start, des } = useSelector(travelSelector);
     const mapRef = useRef(null);
+    const dispatch = useDispatch();
+
+    const handleClickMap = (e) => {
+        axios
+            .get(geocode, {
+                params: {
+                    latlng:
+                        e.nativeEvent.coordinate.latitude +
+                        "," +
+                        e.nativeEvent.coordinate.longitude,
+                    api_key: GOONG_REST_API,
+                },
+            })
+            .then(function (response) {
+                response = response.data;
+
+                if (response.status === "OK") {
+                    console.log(response.results[0].formatted_address);
+                    dispatch(
+                        setSearchDes(response.results[0].formatted_address)
+                    );
+                }
+                // console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+            .then(function () {
+                // always executed
+            });
+
+        dispatch(setDes(e.nativeEvent.coordinate));
+    };
 
     useEffect(() => {
         if (!start || !des) return;
@@ -25,21 +63,24 @@ function Hailing() {
     return (
         <View style={styles.container}>
             <View style={styles.map}>
-                {/* <MapView
+                <MapView
                     ref={mapRef}
                     style={styles.currentMapView}
                     mapType="mutedStandard"
                     initialRegion={{
-                        latitude: start?.location.lat,
-                        longitude: start?.location.lng,
+                        latitude: start?.latitude,
+                        longitude: start?.longitude,
                         latitudeDelta: 0.005,
                         longitudeDelta: 0.005,
                     }}
                     showsUserLocation={true}
                     showsTraffic={true}
                     userLocationUpdateInterval={5000}
+                    onPress={(e) => {
+                        handleClickMap(e);
+                    }}
                 >
-                    {start && des && (
+                    {/* {start && des && (
                         <MapViewDirections
                             origin={start.description}
                             destination={des.description}
@@ -47,28 +88,28 @@ function Hailing() {
                             strokeWidth={3}
                             strokeColor="black"
                         />
-                    )}
+                    )} */}
 
-                    {start?.location.lat && (
+                    {start?.latitude && (
                         <Marker
                             coordinate={{
-                                latitude: start?.location.lat,
-                                longitude: start?.location.lng,
+                                latitude: start?.latitude,
+                                longitude: start?.longitude,
                             }}
                             identifier="start"
                         />
                     )}
 
-                    {des?.location.lat && (
+                    {des?.longitude && (
                         <Marker
                             coordinate={{
-                                latitude: des?.location.lat,
-                                longitude: des?.location.lng,
+                                latitude: des?.latitude,
+                                longitude: des?.longitude,
                             }}
                             identifier="des"
                         />
                     )}
-                </MapView> */}
+                </MapView>
             </View>
             <View style={styles.hailingContent}>
                 <NavigateCardStackScreen />
