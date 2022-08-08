@@ -22,36 +22,32 @@ function Login({ navigation }) {
     const { username, password } = useSelector(accountSelector);
 
     const handleSubmit = async () => {
-        navigation.reset({
-            index: 0,
-            routes: [{ name: "HomeStack" }],
-        });
-        // if (username !== "" && password !== "") {
-        //     axios
-        //         .post(loginAPI, {
-        //             username,
-        //             password,
-        //         })
-        //         .then(function (response) {
-        //             const userInfo = response.data;
+        if (username !== "" && password !== "") {
+            axios
+                .post(loginAPI, {
+                    username,
+                    password,
+                })
+                .then(function (response) {
+                    const userInfo = response.data;
 
-        //             if (userInfo !== null && response.status === 200) {
-        //                 console.log(userInfo);
-        //                 dispatch(setUserInfo(userInfo));
+                    if (userInfo !== null && response.status === 200) {
+                        console.log(userInfo);
+                        dispatch(setUserInfo(userInfo));
 
-        //                 navigation.reset({
-        //                     index: 0,
-        //                     routes: [{ name: "HomeStack" }],
-        //                 });
-        //             }
-        //         })
-        //         .catch(function (error) {
-        //             alert("Tên tài khoản hoặc mật khẩu sai");
-        //             dispatch(setUsername(""));
-        //             dispatch(setPassword(""));
-        //             console.log(error);
-        //         });
-        // }
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: "HomeStack" }],
+                        });
+                    }
+                })
+                .catch(function (error) {
+                    alert("Tên tài khoản hoặc mật khẩu sai");
+                    dispatch(setUsername(""));
+                    dispatch(setPassword(""));
+                    console.log(error);
+                });
+        }
     };
 
     return (

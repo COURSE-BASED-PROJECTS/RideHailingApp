@@ -78,8 +78,8 @@ function Car({ navigation }) {
     const handleHailingCar = () => {
         const packageHailing = {
             type: "SENT",
-            phoneNumber: "0123456789",
-            cusName: "Nguyen Duc Huy",
+            phoneNumber: travelInformation?.phoneNumber ?? "0123456789",
+            cusName: travelInformation?.name ?? "Noname",
             pickingAddress: searchStart,
             lngPickingAddr: +start?.latitude ?? 0,
             latPickingAddr: +start?.longitude ?? 0,
