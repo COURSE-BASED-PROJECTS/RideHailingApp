@@ -67,8 +67,8 @@ function Hailing() {
                     style={styles.currentMapView}
                     mapType="mutedStandard"
                     initialRegion={{
-                        latitude: start?.latitude,
-                        longitude: start?.longitude,
+                        latitude: start?.latitude ?? 10.7628356,
+                        longitude: start?.longitude ?? 106.680293,
                         latitudeDelta: 0.005,
                         longitudeDelta: 0.005,
                     }}

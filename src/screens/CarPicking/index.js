@@ -15,11 +15,18 @@ import styles from "./styles";
 import SockJS from "sockjs-client"; // Note this line
 import Stomp from "stompjs";
 import axios from "axios";
+import uuid from "react-native-uuid";
 
 import { travelSelector } from "../../store/selector";
 import { searchSelector } from "../../store/selector";
 import { useDispatch, useSelector } from "react-redux";
-import { setTravelInfomation } from "../../store/reducer/travelSlice";
+import {
+    setStart,
+    setTravelInfomation,
+    setDes,
+    setStatusPackage,
+} from "../../store/reducer/travelSlice";
+import { setSearchStart, setSearchDes } from "../../store/reducer/searchSlice";
 
 import { GOONG_REST_API } from "@env";
 import { distance } from "../../service/api";
@@ -77,30 +84,39 @@ function Car({ navigation }) {
 
     const handleHailingCar = () => {
         const packageHailing = {
-            type: "SENT",
-            phoneNumber: travelInformation?.phoneNumber ?? "0123456789",
-            cusName: travelInformation?.name ?? "Noname",
-            pickingAddress: searchStart,
-            lngPickingAddr: +start?.latitude ?? 0,
-            latPickingAddr: +start?.longitude ?? 0,
-            arrivingAddress: searchDes,
-            lngArrivingAddr: +des?.latitude ?? 0,
-            latArrivingAddr: +des?.longitude ?? 0,
-            distance: +travelInformation?.distanceTripValue ?? 0,
-            duration: +travelInformation?.timeTripValue ?? 0,
-            cost: 23000,
-            bookingTime: new Date(
-                Date.now() - new Date().getTimezoneOffset() * 60000
-            )
-                .toISOString()
-                .slice(0, -1),
+            idHailing: uuid.v4(),
+            idDriver: null,
+            idClient: travelInformation?.phoneNumber ?? "123",
+            hailing: {
+                locationStart: {
+                    latitude: +start?.latitude ?? 0,
+                    longitude: +start?.longitude ?? 0,
+                    name: searchStart,
+                },
+                locationEnd: {
+                    latitude: +des?.latitude ?? 0,
+                    longitude: +des?.longitude ?? 0,
+                    name: searchDes,
+                },
+                distance: +travelInformation?.distanceTripValue ?? 0,
+                carType: "",
+                cost: 23000,
+                timeDuring: travelInformation?.timeTripValue ?? 0,
+                timeStart: new Date(
+                    Date.now() - new Date().getTimezoneOffset() * 60000
+                )
+                    .toISOString()
+                    .slice(0, -1),
+            },
+            status: "",
+            scope: [],
         };
 
         console.log(packageHailing);
 
         if (stompClient !== null) {
             stompClient.send(
-                "/app/order.sendOrder",
+                "/app/order.getOrder",
                 {},
                 JSON.stringify(packageHailing)
             );
@@ -113,10 +129,11 @@ function Car({ navigation }) {
         console.log("onConnected");
         // Subscribe to the Public Topic
         stompClient.subscribe("/topic/public", onMessageReceived);
+        stompClient.subscribe("/topic/" + "123", onMessageReceivedPrivate);
     };
 
     const onError = (error) => {
-        stompClient = null;
+        // stompClient = null;
         console.log(error);
     };
 
@@ -124,6 +141,45 @@ function Car({ navigation }) {
         console.log("onMessageReceived");
         const message = JSON.parse(payload.body);
         console.log(message);
+    };
+
+    const onMessageReceivedPrivate = (payload) => {
+        const message = JSON.parse(payload.body);
+        console.log(message);
+        if (message.status === "no_driver") {
+            setTimeout(() => {
+                dispatch(
+                    setStatusPackage(
+                        "Không tìm thấy tài xế. Vui lòng đặt lại!!!"
+                    )
+                );
+            }, 2000);
+
+            setTimeout(() => {
+                dispatch(setTravelInfomation(null));
+                dispatch(setSearchDes(null));
+                dispatch(setStatusPackage("Đang tìm tài xế..."));
+
+                navigation.navigate("Destination");
+            }, 4000);
+        } else if (message.status === "have_driver") {
+            dispatch(setTravelInfomation(message));
+        } else if (message.status === "end") {
+            setTimeout(() => {
+                dispatch(setStatusPackage("Chuyến đi kết thúc!"));
+            }, 2000);
+
+            setTimeout(() => {
+                dispatch(setSearchStart(null));
+                dispatch(setSearchDes(null));
+                dispatch(setTravelInfomation(null));
+                dispatch(setStart(null));
+                dispatch(setDes(null));
+                dispatch(setStatusPackage("Đang tìm tài xế..."));
+
+                navigation.navigate("Home");
+            }, 4000);
+        }
     };
 
     useEffect(() => {

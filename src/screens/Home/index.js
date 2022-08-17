@@ -89,7 +89,6 @@ function Home({ navigation }) {
 
                 <TouchableOpacity
                     style={styles.headerNotifButton}
-                    onPress={moveTo}
                 >
                     <Image
                         source={require("../../../assets/icons/notification.png")}
@@ -155,8 +154,8 @@ function Home({ navigation }) {
             <MapView
                 style={styles.currentMapView}
                 region={{
-                    latitude: start?.latitude ?? 0,
-                    longitude: start?.longitude ?? 0,
+                    latitude: start?.latitude ?? 10.7628356,
+                    longitude: start?.longitude ?? 106.680293,
                     latitudeDelta: 0.005,
                     longitudeDelta: 0.005,
                 }}
@@ -180,8 +179,8 @@ function Home({ navigation }) {
 
                 <Marker
                     coordinate={{
-                        latitude: start?.latitude ?? 0,
-                        longitude: start?.longitude ?? 0,
+                        latitude: start?.latitude ?? 10.7628356,
+                        longitude: start?.longitude ?? 10.7628356,
                     }}
                 />
             </MapView>
