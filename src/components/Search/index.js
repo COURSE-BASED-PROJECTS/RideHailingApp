@@ -29,6 +29,7 @@ function Search({ type, moveTo }) {
                 style={styles.searchInput}
                 placeholder={"Tìm kiếm địa điểm đến"}
                 value={type === "start" ? searchStart : searchDes}
+                editable={false}
             ></TextInput>
             <TouchableOpacity onPress={moveTo}>
                 <Image

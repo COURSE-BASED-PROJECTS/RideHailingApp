@@ -1,13 +1,17 @@
 import { View, Text, TextInput } from "react-native";
 import styles from "./styles";
 
-import { setUsername, setPassword } from "../../store/reducer/accountSlice";
+import {
+    setUsername,
+    setPassword,
+    setRegisterInfo,
+} from "../../store/reducer/accountSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { accountSelector } from "../../store/selector";
 
 function FormElement(props) {
     const dispatch = useDispatch();
-    const { username, password } = useSelector(accountSelector);
+    const { username, password, registerInfo } = useSelector(accountSelector);
 
     const {
         title = "N/A",
@@ -15,15 +19,34 @@ function FormElement(props) {
         keyboardType = "default",
         secureTextEntry = false,
         text = "default",
+        type = "login",
+        register = "",
     } = props;
 
     const handleInfoAccount = (newText) => {
-        if (secureTextEntry) {
-            dispatch(setPassword(newText));
+        if (type === "login") {
+            if (secureTextEntry) {
+                dispatch(setPassword(newText));
+            } else {
+                dispatch(setUsername(newText));
+            }
         } else {
-            dispatch(setUsername(newText));
+            dispatch(setRegisterInfo({ newText, type: register }));
         }
     };
+
+    let valueText = "";
+
+    if (type === "login") {
+        if (secureTextEntry) {
+            valueText = password;
+        } else if (text === "_username_") {
+            valueText = username;
+        } else {
+        }
+    } else if (type === "register") {
+        valueText = registerInfo[register];
+    }
 
     return (
         <View style={styles.form}>
@@ -33,20 +56,15 @@ function FormElement(props) {
                 </Text>
                 <View style={styles.formElementContent}>
                     <TextInput
+                        editable={type === "info" ? false : true}
                         style={styles.formTextInput}
-                        placeholder={placeholder}
+                        placeholder={type === "info" ? "......" : placeholder}
                         keyboardType={keyboardType}
                         secureTextEntry={secureTextEntry}
                         onChangeText={(newText) => {
                             handleInfoAccount(newText);
                         }}
-                        value={
-                            secureTextEntry
-                                ? password
-                                : text === "_username_"
-                                ? username
-                                : text
-                        }
+                        value={valueText}
                     />
                 </View>
             </View>

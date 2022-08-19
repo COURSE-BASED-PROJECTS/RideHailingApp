@@ -26,27 +26,31 @@ function UserInfo() {
                     <ScrollView>
                         <FormElement
                             title={"SĐT"}
-                            placeholder={"Nhập số điện thoại"}
+                            // placeholder={"Nhập số điện thoại"}
                             keyboardType={"numeric"}
                             text={userInfo?.phoneNumber}
+                            type="info"
                         />
 
                         <FormElement
                             title={"Họ và tên"}
-                            placeholder={"Nhập họ tên"}
+                            // placeholder={"Nhập họ tên"}
                             text={userInfo?.name}
+                            type="info"
                         />
 
                         <FormElement
-                            title={"Mật khẩu"}
-                            placeholder={"Nhập mật khẩu"}
-                            secureTextEntry={true}
+                            title={"Tên đăng nhập"}
+                            // placeholder={"Nhập mật khẩu"}
+                            text={userInfo?.username}
+                            type="info"
                         />
 
                         <FormElement
                             title={"Địa chỉ"}
-                            placeholder={"Nhập Địa chỉ"}
+                            // placeholder={"Nhập Địa chỉ"}
                             text={userInfo.address}
+                            type="info"
                         />
                     </ScrollView>
                 </KeyboardAvoidingView>

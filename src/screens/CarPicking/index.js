@@ -32,6 +32,7 @@ import { GOONG_REST_API } from "@env";
 import { distance } from "../../service/api";
 
 import dataCar from "../../utils/dataCar";
+import calCostTrip from "../../utils/calCostTrip";
 
 let stompClient = null;
 
@@ -247,7 +248,14 @@ function Car({ navigation }) {
                                 {travelInformation?.distanceTrip ?? ""}
                             </Text>
                         </View>
-                        <Text style={{ fontWeight: "500" }}>100,000 đ</Text>
+                        <Text style={{ fontWeight: "500" }}>
+                            {calCostTrip(
+                                +travelInformation?.distanceTripValue ?? 0,
+                                +item.multiplier
+                            )
+                                .toFixed(2)
+                                .replace(/\d(?=(\d{3})+\.)/g, "$&,") + "đ"}
+                        </Text>
                     </TouchableOpacity>
                 )}
             />

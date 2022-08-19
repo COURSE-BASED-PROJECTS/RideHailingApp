@@ -12,10 +12,9 @@ function IntroductionScreen({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Car Sharing Service</Text>
+        <Text style={styles.title}>Đặt xe trực tuyến</Text>
         <Text style={styles.subTitle}>
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry.
+          Dịch vụ đặt xe trực tuyến UP sẽ đưa bạn bất cứ đâu.
         </Text>
       </View>
 

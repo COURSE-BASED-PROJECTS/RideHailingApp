@@ -16,14 +16,15 @@ import { useEffect, useState } from "react";
 
 import { setStart } from "../../store/reducer/travelSlice";
 import { setSearchStart } from "../../store/reducer/searchSlice";
-import { travelSelector } from "../../store/selector";
+import { travelSelector, accountSelector } from "../../store/selector";
 
 import Search from "../../components/Search";
 
 function Home({ navigation }) {
     const { start } = useSelector(travelSelector);
+    const { userInfo } = useSelector(accountSelector);
+
     const dispatch = useDispatch();
-    console.log("Home render");
 
     const moveTo = () => {
         navigation.navigate("Hailing");
@@ -85,11 +86,11 @@ function Home({ navigation }) {
                     style={styles.headerAva}
                     source={require("../../../assets/icons/ava.png")}
                 />
-                <Text style={styles.headerTitle}>Xin chào, Đức Huy </Text>
+                <Text style={styles.headerTitle}>
+                    Xin chào, {userInfo?.name}{" "}
+                </Text>
 
-                <TouchableOpacity
-                    style={styles.headerNotifButton}
-                >
+                <TouchableOpacity style={styles.headerNotifButton}>
                     <Image
                         source={require("../../../assets/icons/notification.png")}
                         style={styles.headerNotifIcon}
