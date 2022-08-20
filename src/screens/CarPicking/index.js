@@ -100,8 +100,11 @@ function Car({ navigation }) {
                     name: searchDes,
                 },
                 distance: +travelInformation?.distanceTripValue ?? 0,
-                carType: "",
-                cost: 23000,
+                carType: 4,
+                cost: calCostTrip(
+                    +travelInformation?.distanceTripValue ?? 0,
+                    +item.multiplier
+                ),
                 timeDuring: travelInformation?.timeTripValue ?? 0,
                 timeStart: new Date(
                     Date.now() - new Date().getTimezoneOffset() * 60000
@@ -130,7 +133,10 @@ function Car({ navigation }) {
         console.log("onConnected");
         // Subscribe to the Public Topic
         stompClient.subscribe("/topic/public", onMessageReceived);
-        stompClient.subscribe("/topic/" + "123", onMessageReceivedPrivate);
+        stompClient.subscribe(
+            "/topic/" + travelInformation?.phoneNumber,
+            onMessageReceivedPrivate
+        );
     };
 
     const onError = (error) => {

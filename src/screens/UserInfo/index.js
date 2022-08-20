@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { accountSelector } from "../../store/selector";
 
 function UserInfo() {
-    const userInfo = useSelector(accountSelector);
+    const {userInfo} = useSelector(accountSelector);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -49,7 +49,7 @@ function UserInfo() {
                         <FormElement
                             title={"Địa chỉ"}
                             // placeholder={"Nhập Địa chỉ"}
-                            text={userInfo.address}
+                            text={userInfo?.address}
                             type="info"
                         />
                     </ScrollView>

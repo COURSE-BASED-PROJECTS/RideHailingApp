@@ -46,6 +46,8 @@ function FormElement(props) {
         }
     } else if (type === "register") {
         valueText = registerInfo[register];
+    } else if (type === "info") {
+        valueText = text;
     }
 
     return (
@@ -65,6 +67,10 @@ function FormElement(props) {
                             handleInfoAccount(newText);
                         }}
                         value={valueText}
+                        // selection={{
+                        //     start: 0,
+                        //     end: 0,
+                        // }}
                     />
                 </View>
             </View>

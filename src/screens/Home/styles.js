@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     headerAva:{
         width: 50,
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     },
     headerTitle:{
         fontSize: 20,
-        marginHorizontal: 40
+        marginHorizontal: 20
     },
     headerNotifButton:{
 

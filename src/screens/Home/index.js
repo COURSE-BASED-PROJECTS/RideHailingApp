@@ -90,7 +90,7 @@ function Home({ navigation }) {
                     Xin chào, {userInfo?.name}{" "}
                 </Text>
 
-                <TouchableOpacity style={styles.headerNotifButton}>
+                {/* <TouchableOpacity style={styles.headerNotifButton}>
                     <Image
                         source={require("../../../assets/icons/notification.png")}
                         style={styles.headerNotifIcon}
@@ -107,7 +107,7 @@ function Home({ navigation }) {
                     >
                         5
                     </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
 
             <Text style={styles.title}>BẠN MUỐN ĐI ĐÂU ?</Text>
