@@ -13,11 +13,17 @@ function HistoryElement({ history }) {
                 />
                 <View style={styles.content}>
                     <Text style={styles.historyTitle}>
-                        Chuyến đi đến Khoa học tự nhiên
+                        {history?.pickingAddress}
                     </Text>
-                    <Text style={styles.historyTime}>20/06/2022, 10:11</Text>
+                    <Text style={styles.historyTime}>
+                        {history?.timeDuring}
+                    </Text>
                 </View>
-                <Text style={styles.price}>100.000đ</Text>
+                <Text style={styles.price}>
+                    {(history?.cost ?? 0)
+                        .toFixed(2)
+                        .replace(/\d(?=(\d{3})+\.)/g, "$&,") + "đ"}
+                </Text>
             </View>
         </View>
     );

@@ -103,7 +103,7 @@ function Car({ navigation }) {
                 carType: 4,
                 cost: calCostTrip(
                     +travelInformation?.distanceTripValue ?? 0,
-                    +item.multiplier
+                    +selected.multiplier
                 ),
                 timeDuring: travelInformation?.timeTripValue ?? 0,
                 timeStart: new Date(
@@ -113,7 +113,7 @@ function Car({ navigation }) {
                     .slice(0, -1),
             },
             status: "",
-            scope: [],
+            scope: "app",
         };
 
         console.log(packageHailing);
@@ -257,7 +257,7 @@ function Car({ navigation }) {
                         <Text style={{ fontWeight: "500" }}>
                             {calCostTrip(
                                 +travelInformation?.distanceTripValue ?? 0,
-                                +item.multiplier
+                                item.multiplier
                             )
                                 .toFixed(2)
                                 .replace(/\d(?=(\d{3})+\.)/g, "$&,") + "đ"}

@@ -8,6 +8,8 @@ import { accountSelector } from "../../store/selector";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 
+import { historyAPI } from "../../service/api";
+
 function History() {
     const { userInfo } = useSelector(accountSelector);
     const [histories, setHistories] = useState([]);
@@ -17,11 +19,7 @@ function History() {
             return;
         else {
             axios
-                .get("/user", {
-                    params: {
-                        phonenumber: userInfo?.phonenumber,
-                    },
-                })
+                .get(historyAPI + userInfo?.phonenumber)
                 .then(function (response) {
                     if (response.status === 200) {
                         setHistories(response.data);
@@ -39,19 +37,16 @@ function History() {
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Lịch sử hoạt động</Text>
-            <ScrollView style={styles.container}>
-                {/* put all the elements below into flatlist or use the map for the list*/}
-                {histories.map((history, index) => {
-                    return <HistoryElement history={history} key={index} />;
-                })}
-                <HistoryElement />
-                <HistoryElement />
-                <HistoryElement />
-                <HistoryElement />
-                <HistoryElement />
-                <HistoryElement />
-                <HistoryElement />
-            </ScrollView>
+
+            {histories.length > 0 ? (
+                <ScrollView style={styles.container}>
+                    {histories.map((history, index) => {
+                        return <HistoryElement history={history} key={index} />;
+                    })}
+                </ScrollView>
+            ) : (
+                <Text style={{marginLeft:20}}>Không có lịch sử hoạt động</Text>
+            )}
         </SafeAreaView>
     );
 }
