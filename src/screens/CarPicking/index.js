@@ -17,8 +17,11 @@ import Stomp from "stompjs";
 import axios from "axios";
 import uuid from "react-native-uuid";
 
-import { travelSelector } from "../../store/selector";
-import { searchSelector } from "../../store/selector";
+import {
+    travelSelector,
+    searchSelector,
+    accountSelector,
+} from "../../store/selector";
 import { useDispatch, useSelector } from "react-redux";
 import {
     setStart,
@@ -40,6 +43,8 @@ function Car({ navigation }) {
     const [selected, setSelected] = useState(null);
     const { start, des, travelInformation } = useSelector(travelSelector);
     const { searchStart, searchDes } = useSelector(searchSelector);
+    const { userInfo } = useSelector(accountSelector);
+
     const dispatch = useDispatch();
 
     const handleBack = () => {
@@ -47,47 +52,49 @@ function Car({ navigation }) {
     };
 
     useEffect(() => {
-        axios
-            .get(distance, {
-                params: {
-                    origin: start?.latitude + "," + start?.longitude,
-                    destination: des?.latitude + "," + des?.longitude,
-                    vehicle: "car",
-                    api_key: GOONG_REST_API,
-                },
-            })
-            .then(function (response) {
-                if (response.status === 200) {
-                    const dataTravel = response.data.routes[0].legs[0];
+        if (start !== null && des !== null) {
+            axios
+                .get(distance, {
+                    params: {
+                        origin: start?.latitude + "," + start?.longitude,
+                        destination: des?.latitude + "," + des?.longitude,
+                        vehicle: "car",
+                        api_key: GOONG_REST_API,
+                    },
+                })
+                .then(function (response) {
+                    if (response.status === 200) {
+                        const dataTravel = response.data.routes[0].legs[0];
 
-                    const distanceTrip = dataTravel.distance.text;
-                    const timeTrip = dataTravel.duration.text;
-                    const distanceTripValue = dataTravel.distance.value;
-                    const timeTripValue = dataTravel.duration.value;
+                        const distanceTrip = dataTravel.distance.text;
+                        const timeTrip = dataTravel.duration.text;
+                        const distanceTripValue = dataTravel.distance.value;
+                        const timeTripValue = dataTravel.duration.value;
 
-                    dispatch(
-                        setTravelInfomation({
-                            distanceTrip,
-                            timeTrip,
-                            distanceTripValue,
-                            timeTripValue,
-                        })
-                    );
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-            .then(function () {
-                // always executed
-            });
+                        dispatch(
+                            setTravelInfomation({
+                                distanceTrip,
+                                timeTrip,
+                                distanceTripValue,
+                                timeTripValue,
+                            })
+                        );
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+                .then(function () {
+                    // always executed
+                });
+        }
     }, [start, des]);
 
     const handleHailingCar = () => {
         const packageHailing = {
             idHailing: uuid.v4(),
             idDriver: null,
-            idClient: travelInformation?.phoneNumber ?? "123",
+            idClient: userInfo?.phoneNumber ?? "123",
             hailing: {
                 locationStart: {
                     latitude: +start?.latitude ?? 0,
@@ -134,7 +141,7 @@ function Car({ navigation }) {
         // Subscribe to the Public Topic
         stompClient.subscribe("/topic/public", onMessageReceived);
         stompClient.subscribe(
-            "/topic/" + travelInformation?.phoneNumber,
+            "/topic/" + userInfo?.phoneNumber,
             onMessageReceivedPrivate
         );
     };
