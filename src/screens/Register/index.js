@@ -18,30 +18,48 @@ import { setRegisterInfo } from "../../store/reducer/accountSlice";
 import { registerAPI } from "../../service/api";
 
 import axios from "axios";
+import { useEffect } from "react";
 
 function RegisterScreen({ navigation }) {
     const dispatch = useDispatch();
 
     const { registerInfo } = useSelector(accountSelector);
+
     const handleSubmit = () => {
         console.log(registerInfo);
 
-        if (registerInfo !== {}) {
+        if (
+            registerInfo.phoneNumber &&
+            registerInfo.password &&
+            registerInfo.name &&
+            registerInfo.address
+        ) {
             axios
                 .post(registerAPI, {
                     ...registerInfo,
-                    role: "",
+                    role: "DRIVER",
                     avatar: "",
                     isLocked: false,
+                    username: registerInfo?.phoneNumber,
                 })
                 .then(function (response) {
-                    console.log(response);
-                    // navigation.navigate("Login");
-                    dispatch(setRegisterInfo({}));
+                    console.log(response.data);
+
+                    if (response.status === 200) {
+                        dispatch(setRegisterInfo({}));
+
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: "Login" }],
+                        });
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);
+                    alert("Tài khoản đã tồn tại");
                 });
+        } else {
+            alert("Nhập đầy đủ thông tin đăng ký");
         }
     };
 
@@ -64,11 +82,19 @@ function RegisterScreen({ navigation }) {
                 enabled={false}
             >
                 <ScrollView>
-                    <FormElement
+                    {/* <FormElement
                         title={"Tên đăng nhập"}
                         placeholder={"Nhập tên đăng nhập"}
                         type="register"
                         register="username"
+                    /> */}
+
+                    <FormElement
+                        title={"SĐT"}
+                        placeholder={"Nhập số điện thoại"}
+                        keyboardType={"numeric"}
+                        type="register"
+                        register="phoneNumber"
                     />
 
                     <FormElement
@@ -77,13 +103,6 @@ function RegisterScreen({ navigation }) {
                         secureTextEntry={true}
                         type="register"
                         register="password"
-                    />
-                    <FormElement
-                        title={"SĐT"}
-                        placeholder={"Nhập số điện thoại"}
-                        keyboardType={"numeric"}
-                        type="register"
-                        register="phone"
                     />
 
                     <FormElement
