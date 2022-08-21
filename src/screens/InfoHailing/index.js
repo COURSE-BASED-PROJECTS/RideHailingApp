@@ -15,24 +15,32 @@ function InfoHailing({ navigation }) {
                     <Text style={styles.title}>Thông tin chuyến đi</Text>
                     <View style={styles.infoHailing}>
                         <ScrollView>
-                            <Text style={styles.titleInfo}>
+                            {/* <Text style={styles.titleInfo}>
                                 Thông tin tài xế:{" "}
-                            </Text>
-                            <Text style={styles.infoContent}>
+                            </Text> */}
+                            {/* <Text style={styles.infoContent}>
                                 Nguyễn Hoàng Thông - 59B3 8888
-                            </Text>
+                            </Text> */}
 
                             <Text style={styles.titleInfo}>Chặng đường: </Text>
                             <Text style={styles.infoContent}>
-                                {travelInformation?.hailing?.locationStart?.name} --&gt;{" "}
+                                {
+                                    travelInformation?.hailing?.locationStart
+                                        ?.name
+                                }{" "}
+                                --&gt;{" "}
                                 {travelInformation?.hailing?.locationEnd?.name}
                             </Text>
 
                             <Text style={styles.titleInfo}>Thời gian: </Text>
-                            <Text style={styles.infoContent}>{travelInformation?.timeTrip}</Text>
+                            <Text style={styles.infoContent}>
+                                {travelInformation?.timeTrip}
+                            </Text>
 
                             <Text style={styles.titleInfo}>Giá tiền: </Text>
-                            <Text style={styles.infoContent}>20,000đ</Text>
+                            <Text style={styles.infoContent}>
+                                {travelInformation?.distanceTrip}
+                            </Text>
                         </ScrollView>
                     </View>
                 </SafeAreaView>
