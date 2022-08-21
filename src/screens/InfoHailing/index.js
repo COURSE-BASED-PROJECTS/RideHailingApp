@@ -1,12 +1,40 @@
 import { Text, TouchableOpacity, Image, View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { travelSelector } from "../../store/selector";
 
+import { setTravelInfomation } from "../../store/reducer/travelSlice";
+import { driverAPI } from "../../service/api";
+
 import styles from "./styles";
+import { useEffect } from "react";
 
 function InfoHailing({ navigation }) {
+    const dispatch = useDispatch();
     const { travelInformation, statusPackage } = useSelector(travelSelector);
+
+    useEffect(() => {
+        if (travelInformation?.idDriver) {
+            axios
+                .get(driverInfoAPI + travelInformation?.idDriver)
+                .then(function (res) {
+                    const driverInfo = res.data;
+                    console.log(driverInfo);
+                    // handle success
+                    if (driverInfo !== null && res.status === 200) {
+                        dispatch(setTravelInfomation(driverInfo));
+                    }
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                    alert("Đăng nhập thất bại");
+                })
+                .then(function () {
+                    // always executed
+                });
+        }
+    }, []);
 
     return (
         <>
@@ -15,12 +43,13 @@ function InfoHailing({ navigation }) {
                     <Text style={styles.title}>Thông tin chuyến đi</Text>
                     <View style={styles.infoHailing}>
                         <ScrollView>
-                            {/* <Text style={styles.titleInfo}>
+                            <Text style={styles.titleInfo}>
                                 Thông tin tài xế:{" "}
-                            </Text> */}
-                            {/* <Text style={styles.infoContent}>
-                                Nguyễn Hoàng Thông - 59B3 8888
-                            </Text> */}
+                            </Text>
+                            <Text style={styles.infoContent}>
+                                {travelInformation?.name} -{" "}
+                                {travelInformation?.plate}
+                            </Text>
 
                             <Text style={styles.titleInfo}>Chặng đường: </Text>
                             <Text style={styles.infoContent}>
