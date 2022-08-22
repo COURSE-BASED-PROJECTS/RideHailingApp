@@ -7,32 +7,39 @@ import { useEffect } from "react";
 import { accountSelector } from "../../store/selector";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
 
 import { historyAPI } from "../../service/api";
 
 function History() {
     const { userInfo } = useSelector(accountSelector);
     const [histories, setHistories] = useState([]);
+    const isFocused = useIsFocused();
 
     useEffect(() => {
-        if (userInfo?.phonenumber === "" || userInfo?.phonenumber === undefined)
-            return;
-        else {
-            axios
-                .get(historyAPI + userInfo?.phonenumber)
-                .then(function (response) {
-                    if (response.status === 200) {
-                        setHistories(response.data);
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-                .then(function () {
-                    // always executed
-                });
+        if (isFocused) {
+            if (
+                userInfo?.phonenumber === "" ||
+                userInfo?.phonenumber === undefined
+            )
+                return;
+            else {
+                axios
+                    .get(historyAPI + userInfo?.phonenumber)
+                    .then(function (response) {
+                        if (response.status === 200) {
+                            setHistories(response.data);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+                    .then(function () {
+                        // always executed
+                    });
+            }
         }
-    }, []);
+    }, [isFocused]);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -45,7 +52,9 @@ function History() {
                     })}
                 </ScrollView>
             ) : (
-                <Text style={{marginLeft:20}}>Không có lịch sử hoạt động</Text>
+                <Text style={{ marginLeft: 20 }}>
+                    Không có lịch sử hoạt động
+                </Text>
             )}
         </SafeAreaView>
     );

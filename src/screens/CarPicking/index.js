@@ -32,10 +32,13 @@ import {
 import { setSearchStart, setSearchDes } from "../../store/reducer/searchSlice";
 
 import { GOONG_REST_API } from "@env";
-import { distance } from "../../service/api";
+import { distance, driverAPI } from "../../service/api";
 
 import dataCar from "../../utils/dataCar";
 import calCostTrip from "../../utils/calCostTrip";
+
+import axios from "axios";
+import NumberFormat from "react-number-format";
 
 let stompClient = null;
 
@@ -177,7 +180,30 @@ function Car({ navigation }) {
                 navigation.navigate("Destination");
             }, 4000);
         } else if (message.status === "have_driver") {
-            dispatch(setTravelInfomation(message));
+            if (message?.idDriver) {
+                axios
+                    .get(driverAPI + message?.idDriver)
+                    .then(function (res) {
+                        const driverInfo = res.data;
+                        console.log(driverInfo);
+                        // handle success
+                        if (driverInfo !== null && res.status === 200) {
+                            dispatch(
+                                setTravelInfomation({
+                                    ...message,
+                                    ...driverInfo,
+                                })
+                            );
+                        }
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                    })
+                    .then(function () {
+                        // always executed
+                    });
+            }
         } else if (message.status === "end") {
             setTimeout(() => {
                 dispatch(setStatusPackage("Chuyến đi kết thúc!"));
@@ -262,12 +288,17 @@ function Car({ navigation }) {
                             </Text>
                         </View>
                         <Text style={{ fontWeight: "500" }}>
-                            {calCostTrip(
-                                +travelInformation?.distanceTripValue ?? 0,
-                                item.multiplier
-                            )
-                                .toFixed(2)
-                                .replace(/\d(?=(\d{3})+\.)/g, "$&,") + "đ"}
+                            <NumberFormat
+                                value={calCostTrip(
+                                    +travelInformation?.distanceTripValue ?? 0,
+                                    item.multiplier
+                                )}
+                                displayType="text"
+                                thousandSeparator
+                                renderText={(value) => (
+                                    <Text>{value + "đ"}</Text>
+                                )}
+                            />
                         </Text>
                     </TouchableOpacity>
                 )}

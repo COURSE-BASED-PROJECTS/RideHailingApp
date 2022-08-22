@@ -3,38 +3,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector, useDispatch } from "react-redux";
 import { travelSelector } from "../../store/selector";
 
-import { setTravelInfomation } from "../../store/reducer/travelSlice";
-import { driverAPI } from "../../service/api";
-
 import styles from "./styles";
-import { useEffect } from "react";
 
 function InfoHailing({ navigation }) {
-    const dispatch = useDispatch();
     const { travelInformation, statusPackage } = useSelector(travelSelector);
-
-    useEffect(() => {
-        if (travelInformation?.idDriver) {
-            axios
-                .get(driverInfoAPI + travelInformation?.idDriver)
-                .then(function (res) {
-                    const driverInfo = res.data;
-                    console.log(driverInfo);
-                    // handle success
-                    if (driverInfo !== null && res.status === 200) {
-                        dispatch(setTravelInfomation(driverInfo));
-                    }
-                })
-                .catch(function (error) {
-                    // handle error
-                    console.log(error);
-                    alert("Đăng nhập thất bại");
-                })
-                .then(function () {
-                    // always executed
-                });
-        }
-    }, []);
 
     return (
         <>
@@ -68,7 +40,18 @@ function InfoHailing({ navigation }) {
 
                             <Text style={styles.titleInfo}>Giá tiền: </Text>
                             <Text style={styles.infoContent}>
-                                {travelInformation?.distanceTrip}
+                                <NumberFormat
+                                    value={calCostTrip(
+                                        +travelInformation?.distanceTripValue ??
+                                            0,
+                                        item.multiplier
+                                    )}
+                                    displayType="text"
+                                    thousandSeparator
+                                    renderText={(value) => (
+                                        <Text>{value + "đ"}</Text>
+                                    )}
+                                />
                             </Text>
                         </ScrollView>
                     </View>
