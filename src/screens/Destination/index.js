@@ -1,30 +1,32 @@
-import { Text, TouchableOpacity, Image } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import styles from "./styles";
+import { Text, TouchableOpacity, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import styles from './styles';
 
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { GOOGLE_MAPS_APIKEY } from "@env";
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { GOOGLE_MAPS_APIKEY } from '@env';
 
-import { setDes } from "../../store/reducer/travelSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { setDes } from '../../store/reducer/travelSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { travelSelector } from "../../store/selector";
+import { travelSelector, accountSelector } from '../../store/selector';
 
-import Search from "../../components/Search";
+import Search from '../../components/Search';
 
 function Destination({ navigation }) {
     const dispatch = useDispatch();
     const { start, des } = useSelector(travelSelector);
 
+    const { userInfo } = useSelector(accountSelector);
+
     const handleMove = () => {
         if (start === null || des === null) return;
-        navigation.navigate("CarPicking");
+        navigation.navigate('CarPicking');
     };
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>Chào buổi sáng, Đức Huy</Text>
-            <Search type={"des"} />
+            <Text style={styles.title}>Chào buổi sáng, {userInfo?.name}</Text>
+            <Search type={'des'} />
 
             {/* <GooglePlacesAutocomplete
                 styles={{
@@ -58,22 +60,17 @@ function Destination({ navigation }) {
                 }}
             /> */}
 
-            <TouchableOpacity
-                style={styles.pickingCarButton}
-                onPress={handleMove}
-            >
+            <TouchableOpacity style={styles.pickingCarButton} onPress={handleMove}>
                 <Image
-                    source={require("../../../assets/icons/car.png")}
+                    source={require('../../../assets/icons/car.png')}
                     style={{
                         width: 40,
                         height: 40,
-                        resizeMode: "contain",
+                        resizeMode: 'contain',
                     }}
-                    tintColor="white"
+                    tintColor='white'
                 />
-                <Text style={{ fontSize: 18, marginLeft: 10, color: "white" }}>
-                    Chọn xe
-                </Text>
+                <Text style={{ fontSize: 18, marginLeft: 10, color: 'white' }}>Chọn xe</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );
